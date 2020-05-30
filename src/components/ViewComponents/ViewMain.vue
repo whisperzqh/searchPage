@@ -6,7 +6,7 @@
       </el-aside>
       <el-container style="margin-left: 30px;" direction="vertical">
         <el-card style="background-color: #ffffff;">
-          <div style="text-align:left;">博文名称</div>
+          <div style="text-align:left;">{{Title}}</div>
           <div style="text-align:left;">发布日期：{{PostDate}}</div>
           <div class="grid-content" style="text-align:right; overflow:visible;">
             <el-tag v-for="(tag,index) in tags" :key="index" style="margin-right: 8px;">{{tag.label}}</el-tag>
@@ -35,22 +35,24 @@
 </template>
 
 <script>
-  import AuthorInfo from './AuthorInfo.vue'
-  import Comment from './Comment.vue'
-  import Page from './Page.vue'
+import AuthorInfo from './AuthorInfo.vue'
+import Comment from './Comment.vue'
+import Page from './Page.vue'
+import {getBlog} from '../../api/api'
 
-  export default{
-    name: 'ViewMain',
-    data() {
-      return{
-        PostDate: '2019-07-03',
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        pageSize: 10,
-        tags:[
-          {value: 'HTML', label: 'HTML'},
-          {value: 'java', label: 'java'},
-        ],
-        contenthtml:'<h2 class="ql-indent-1"><strong>文本编辑器</strong><a href="https://quilljs.com/" ' +
+export default{
+  name: 'ViewMain',
+  data () {
+    return {
+      Title: '',
+      PostDate: '2019-07-03',
+      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      pageSize: 10, // 评论条数
+      tags: [
+        {value: 'HTML', label: 'HTML'},
+        {value: 'java', label: 'java'}
+      ],
+      contenthtml: '<h2 class="ql-indent-1"><strong>文本编辑器</strong><a href="https://quilljs.com/" ' +
           'target="_blank"><strong>Quill</strong></a><strong>的介绍：</strong></h2><ol><li><span style="color: rgb(0, 102, 204);">' +
           'Quill</span>是一个免费开源文本API编辑器工具，帮助开发人员解决编辑问题。</li><li><span style="color: rgb(0, 102, 204);">' +
           'Quill</span>编辑器旨在通过自身的编辑模块提供强大的API来构建自定义式的编辑器。</li><li>最重要的是，' +
@@ -58,21 +60,41 @@
           '</li><li><span style="color: rgb(0, 102, 204);">Quill</span>是一个轻量级的开源编辑器，拥有良好的可扩展构架和表现力出色的API' +
           '接口，标准化的HTML规则。</li><li><span style="color: rgb(0, 102, 204);">Quill</span>支持的浏览器有<strong class="ql-font-m' +
           'onospace">Firefox</strong>、<strong class="ql-font-monospace">Safari</strong>和<strong class="ql-font-monospace">IE9+</str' +
-          'ong>、<strong class="ql-font-monospace">Chorme</strong>等。</li></ol>',
+          'ong>、<strong class="ql-font-monospace">Chorme</strong>等。</li></ol>'
 
-      };
-    },
-    components: {
-      AuthorInfo,
-      Comment,
-      Page,
-    },
-    methods:{
-      changePage(pageSize){
-        this.pageSize=pageSize;
-      }
     }
+  },
+  components: {
+    AuthorInfo,
+    Comment,
+    Page
+  },
+  methods: {
+    BlogMain () {
+      getBlog().then(response => {
+        if (response.status === 200) {
+          console.log(response)
+          this.Title = response.data.title
+          this.PostDate = response.data.pub_data
+          this.contenthtml = response.data.body
+          this.pageSize = response.data.comments.size
+          this.tags.label = response.data.category.name // 数组
+        } else {
+          this.$message({
+            message: '获取详情失败' + response.message,
+            type: 'error'
+          })
+        }
+      })
+    },
+    changePage (pageSize) {
+      this.pageSize = pageSize
+    }
+  },
+  created () {
+    this.BlogMain()
   }
+}
 </script>
 
 <style>

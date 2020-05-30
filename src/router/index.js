@@ -15,7 +15,7 @@ import DeleteUser from '../components/UserComponents/DeleteUser'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/MainPage',
@@ -33,12 +33,12 @@ export default new Router({
       component: SearchResult
     },
     {
-      path: '/ViewMain',
+      path: '/ViewMain/:AuthorId/:BlogTitle',
       name: 'ViewMain',
       component: ViewMain
     },
     {
-      path: '/EditBlog',
+      path: '/EditBlog/:UserId',
       name: 'EditBlog',
       component: EditBlog
     },
@@ -53,34 +53,56 @@ export default new Router({
       component: Register
     },
     {
-      path: '/Classify/:id',
+      path: '/Classify/:ClassifyId',
       name: 'Classify',
       component: Classify
     },
     {
-      path: '/UserCenter/UserInfo',
+      path: '/UserCenter/UserInfo/:UserId',
       name: 'UserInfo',
       component: UserInfo
     },
     {
-      path: '/UserCenter/BlogList',
+      path: '/UserCenter/BlogList/:UserId',
       name: 'UserBlog',
       component: UserBlog
     },
     {
-      path: '/UserCenter/ChangeInfo',
+      path: '/UserCenter/ChangeInfo/:UserId',
       name: 'ChangeInfo',
       component: ChangeInfo
     },
     {
-      path: '/UserCenter/UploadedFiles',
+      path: '/UserCenter/UploadedFiles/:UserId',
       name: 'UploadedFiles',
       component: UploadedFiles
     },
     {
-      path: '/UserCenter/DeleteUser',
+      path: '/UserCenter/DeleteUser/:UserId',
       name: 'DeleteUser',
       component: DeleteUser
     }
   ]
 })
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
+// 导航守卫 使用router.beforeEach注册一个全局前置守卫，判断用户是否登录
+router.beforeEach((to, from, next) => {
+  if (to.path === '/Login') {
+    next()
+  } else {
+    let token = localStorage.getItem('Authorization')
+
+    if (token === null || token === '') {
+      next('/Login')
+    } else {
+      next()
+    }
+  }
+})
+
+export default router

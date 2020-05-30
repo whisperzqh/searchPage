@@ -74,20 +74,20 @@
 </template>
 
 <script>
-  import {addQuillTitle} from "../quill-title";
+import {addQuillTitle} from '../quill-title'
 
-  export default{
-    data() {
-      return{
-        PostDate: '2019-11-23',
-        imgUrl: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        authorName: 'User',
-        contentHtml: '<h1>评论内容</h1>',
-        editorOption: {
-          theme: 'snow',
-          boundary: document.body,
-          modules: {
-            toolbar:
+export default{
+  data () {
+    return {
+      PostDate: '2019-11-23',
+      imgUrl: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      authorName: 'User',
+      contentHtml: '<h1>评论内容</h1>',
+      editorOption: {
+        theme: 'snow',
+        boundary: document.body,
+        modules: {
+          toolbar:
               [
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
@@ -104,84 +104,84 @@
                 ['clean'],
                 ['link', 'image', 'video']
               ]
-          },
-          placeholder: 'Insert text here ...',
-          readOnly: false
         },
-        dialog: false,
-        form: {
-          name: '用户1',
-          content: ''
-        },
-        timer: null,
-        loading: false,
-        formLabelWidth: '120px'
-      }
-    },
-    computed: {
-      editor() {
-        return this.$refs.myQuillEditor.quill
-      }
-    },
-    mounted() {
-      //初始化
-      addQuillTitle();
-    },
-    methods: {
-      handleClose(done) {
-        if (this.loading) {
-          return;
-        }
-        this.$confirm('确定要提交评论吗？')
-          .then(_ => {
-            this.loading = true;
-            this.timer = setTimeout(() => {
-              done();
-              // 动画关闭需要一定的时间
-              setTimeout(() => {
-                this.loading = false;
-              }, 400);
-            }, 2000);
-          })
-          .catch(_ => {
-          });
+        placeholder: 'Insert text here ...',
+        readOnly: false
       },
-      cancelForm() {
-        this.loading = false;
-        this.dialog = false;
-        clearTimeout(this.timer);
+      dialog: false,
+      form: {
+        name: '用户1',
+        content: ''
       },
-      onEditorReady(editor) {
-      },
-      onSubmit() {
-        //提交
-        //this.$refs.infoForm.validate，这是表单验证
-        this.$refs.infoForm.validate((valid) => {
-          if (valid) {
-            this.$post('m/add/about/us', this.form).then(res => {
-              if (res.errCode == 200) {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'success'
-                });
-                this.$router.push('/aboutus/aboutlist');
-              } else {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'error'
-                });
-              }
-            });
-          }
-        });
-      },
-      toAuthorInfo(){
-        this.$router.push('/UserCenter/UserInfo');
-      }
-    },
-    components: {
+      timer: null,
+      loading: false,
+      formLabelWidth: '120px'
     }
+  },
+  computed: {
+    editor () {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
+  mounted () {
+    // 初始化
+    addQuillTitle()
+  },
+  methods: {
+    handleClose (done) {
+      if (this.loading) {
+        return
+      }
+      this.$confirm('确定要提交评论吗？')
+        .then(_ => {
+          this.loading = true
+          this.timer = setTimeout(() => {
+            done()
+            // 动画关闭需要一定的时间
+            setTimeout(() => {
+              this.loading = false
+            }, 400)
+          }, 2000)
+        })
+        .catch(_ => {
+        })
+    },
+    cancelForm () {
+      this.loading = false
+      this.dialog = false
+      clearTimeout(this.timer)
+    },
+    onEditorReady (editor) {
+    },
+    onSubmit () {
+      // 提交
+      // this.$refs.infoForm.validate，这是表单验证
+      this.$refs.infoForm.validate((valid) => {
+        if (valid) {
+          this.$post('m/add/about/us', this.form).then(res => {
+            if (res.errCode === 200) {
+              this.$message({
+                message: res.errMsg,
+                type: 'success'
+              })
+              this.$router.push('/aboutus/aboutlist')
+            } else {
+              this.$message({
+                message: res.errMsg,
+                type: 'error'
+              })
+            }
+          })
+        }
+      })
+    },
+    toAuthorInfo () {
+      this.$router.push({name: 'UserInfo', params: {UserId: this.authorName}})
+    }
+  },
+  components: {
   }
+}
 </script>
 
 <style>

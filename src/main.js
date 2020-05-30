@@ -5,11 +5,15 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
+import store from './store'
 
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import VueQuillEditor from 'vue-quill-editor'
+
+import axios from 'axios'
+Vue.prototype.$axios = axios
 
 Vue.use(VueQuillEditor)
 
@@ -24,6 +28,7 @@ Vue.directive('title', {
 new Vue({
   el: '#app',
   router,
+  store: store,
   components: { App },
   template: '<App/>'
 })

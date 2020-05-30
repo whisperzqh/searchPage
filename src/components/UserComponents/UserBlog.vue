@@ -4,7 +4,7 @@
       <el-col span="20">
         <el-row>
           <div v-for="o in pageSize" :key="o">
-              <my-card></my-card>
+              <my-card :Card="Card"></my-card>
               <div v-if="rightUser">
                 <el-button type="danger" @click=""
                            style="margin-top: 75px; margin-bottom: 75px;">删除博客</el-button>
@@ -35,6 +35,19 @@
         viewuser:{
           UserName: 'User',
         },
+        //下面是新加的吗
+        Card:{
+          AuthorName:'User',
+          title: 'title',
+          simple:'文章简介',
+          postDate:'2019-01-01',
+          tags:[
+            {value: 'HTML', label: 'HTML'},
+            {value: 'java', label: 'java'},
+          ],
+          imgUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+        },
+        Cards:[],
       }
     },
     components:{

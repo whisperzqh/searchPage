@@ -35,24 +35,24 @@
 </template>
 
 <script>
-  import {addQuillTitle} from "../quill-title";
+import {addQuillTitle} from '../quill-title'
 
-  export default {
-    name: "doComment",
-    data(){
-      return{
-        dialog: false,
-        loading: false,
-        form: {
-          content: '',
-        },
-        formLabelWidth: '80px',
-        timer: null,
-        editorOption: {
-          theme: 'snow',
-          boundary: document.body,
-          modules: {
-            toolbar:
+export default {
+  name: 'doComment',
+  data () {
+    return {
+      dialog: false,
+      loading: false,
+      form: {
+        content: ''
+      },
+      formLabelWidth: '80px',
+      timer: null,
+      editorOption: {
+        theme: 'snow',
+        boundary: document.body,
+        modules: {
+          toolbar:
               [
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
@@ -69,70 +69,70 @@
                 ['clean'],
                 ['link', 'image', 'video']
               ]
-          },
-          placeholder: 'Insert text here ...',
-          readOnly: false
-        }
-      };
-    },
-    computed: {
-        editor() {
-          return this.$refs.myQuillEditor.quill
-        }
-      },
-    mounted() {
-      //初始化
-      addQuillTitle();
-    },
-    methods: {
-      handleClose(done) {
-        if (this.loading) {
-          return;
-        }
-        this.$confirm('确定要提交表单吗？')
-          .then(_ => {
-            this.loading = true;
-            this.timer = setTimeout(() => {
-              done();
-              // 动画关闭需要一定的时间
-              setTimeout(() => {
-                this.loading = false;
-              }, 400);
-            }, 2000);
-          })
-          .catch(_ => {});
-      },
-      cancelForm() {
-        this.loading = false;
-        this.dialog = false;
-        clearTimeout(this.timer);
-      },
-      onEditorReady(editor) {
-      },
-      onSubmit() {
-        //提交
-        //this.$refs.infoForm.validate，这是表单验证
-        this.$refs.infoForm.validate((valid) => {
-          if(valid) {
-            this.$post('m/add/about/us',this.form).then(res => {
-              if(res.errCode === 200) {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'success'
-                });
-                this.$router.push('/aboutus/aboutlist');
-              } else {
-                this.$message({
-                  message: res.errMsg,
-                  type:'error'
-                });
-              }
-            });
-          }
-        });
+        },
+        placeholder: 'Insert text here ...',
+        readOnly: false
       }
     }
+  },
+  computed: {
+    editor () {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
+  mounted () {
+    // 初始化
+    addQuillTitle()
+  },
+  methods: {
+    handleClose (done) {
+      if (this.loading) {
+        return
+      }
+      this.$confirm('确定要提交表单吗？')
+        .then(_ => {
+          this.loading = true
+          this.timer = setTimeout(() => {
+            done()
+            // 动画关闭需要一定的时间
+            setTimeout(() => {
+              this.loading = false
+            }, 400)
+          }, 2000)
+        })
+        .catch(_ => {})
+    },
+    cancelForm () {
+      this.loading = false
+      this.dialog = false
+      clearTimeout(this.timer)
+    },
+    onEditorReady (editor) {
+    },
+    onSubmit () {
+      // 提交
+      // this.$refs.infoForm.validate，这是表单验证
+      this.$refs.infoForm.validate((valid) => {
+        if (valid) {
+          this.$post('m/add/about/us', this.form).then(res => {
+            if (res.errCode === 200) {
+              this.$message({
+                message: res.errMsg,
+                type: 'success'
+              })
+              this.$router.push('/aboutus/aboutlist')
+            } else {
+              this.$message({
+                message: res.errMsg,
+                type: 'error'
+              })
+            }
+          })
+        }
+      })
+    }
   }
+}
 </script>
 
 <style scoped>

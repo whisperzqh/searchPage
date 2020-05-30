@@ -8,11 +8,11 @@
       @open="handleOpen"
       router
       :default-active="this.$route.path">
-         <el-menu-item index="/UserCenter/UserInfo">个人信息</el-menu-item>
-         <el-menu-item index="/UserCenter/ChangeInfo" v-if="user">修改个人信息</el-menu-item>
-         <el-menu-item index="/UserCenter/DeleteUser" v-if="user">注销账户</el-menu-item>
-         <el-menu-item index="/UserCenter/BlogList">博客列表</el-menu-item>
-         <el-menu-item index="/UserCenter/UploadedFiles">上传的资源</el-menu-item>
+         <el-menu-item @click="toUserInfo">个人信息</el-menu-item>
+         <el-menu-item @click="toChangeInfo" v-if="user">修改个人信息</el-menu-item>
+         <el-menu-item @click="toDeleteUser" v-if="user">注销账户</el-menu-item>
+         <el-menu-item @click="toBlogList">博客列表</el-menu-item>
+         <el-menu-item @click="toUploadedFiles">上传的资源</el-menu-item>
      </el-menu>
     </el-col>
   </div>
@@ -39,6 +39,21 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      toBlogList(){
+        this.$router.push({name:'UserBlog',params:{UserId:this.userId}})
+      },
+      toUserInfo(){
+        this.$router.push({name:'UserInfo',params:{UserId:this.userId}})
+      },
+      toChangeInfo(){
+        this.$router.push({name:'ChangeInfo',params:{UserId:this.userId}})
+      },
+      toDeleteUser(){
+        this.$router.push({name:'DeleteUser',params:{UserId:this.userId}})
+      },
+      toUploadedFiles(){
+        this.$router.push({name:'UploadedFiles',params:{UserId:this.userId}})
       }
     },
     components:{

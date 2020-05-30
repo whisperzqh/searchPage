@@ -125,29 +125,29 @@
 </style>
 
 <script>
-  import doComment from './doComment'
-  import {addQuillTitle} from "../quill-title";
-  export default {
-    name: 'AuthorInfo',
-    data() {
-      return {
-        currentDate: new Date(),
-        AuthorName: 'User',
-        imgUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-        squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-        sizeList: ["large", "medium", "small"],
-        dialog: false,
-        loading: false,
-        form: {
-          content: '',
-        },
-        formLabelWidth: '80px',
-        timer: null,
-        editorOption: {
-          theme: 'snow',
-          boundary: document.body,
-          modules: {
-            toolbar:
+import doComment from './doComment'
+import {addQuillTitle} from '../quill-title'
+export default {
+  name: 'AuthorInfo',
+  data () {
+    return {
+      currentDate: new Date(),
+      AuthorName: 'User',
+      imgUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+      squareUrl: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+      sizeList: ['large', 'medium', 'small'],
+      dialog: false,
+      loading: false,
+      form: {
+        content: ''
+      },
+      formLabelWidth: '80px',
+      timer: null,
+      editorOption: {
+        theme: 'snow',
+        boundary: document.body,
+        modules: {
+          toolbar:
               [
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
@@ -164,78 +164,74 @@
                 ['clean'],
                 ['link', 'image', 'video']
               ]
-          },
-          placeholder: 'Insert text here ...',
-          readOnly: false
-        }
-      };
-    },
-    components:{
-      doComment,
-    },
-    computed: {
-        editor() {
-          return this.$refs.myQuillEditor.quill
-        }
-      },
-    mounted() {
-      //初始化
-      addQuillTitle();
-    },
-    methods:{
-      handleClose(done) {
-        if (this.loading) {
-          return;
-        }
-        this.$confirm('确定要提交评论吗？')
-          .then(_ => {
-            this.loading = true;
-            this.timer = setTimeout(() => {
-              done();
-              // 动画关闭需要一定的时间
-              setTimeout(() => {
-                this.loading = false;
-              }, 400);
-            }, 2000);
-          })
-          .catch(_ => {});
-      },
-      cancelForm() {
-        this.loading = false;
-        this.dialog = false;
-        clearTimeout(this.timer);
-      },
-      onEditorReady(editor) {
-      },
-      onSubmit() {
-        //提交
-        //this.$refs.infoForm.validate，这是表单验证
-        this.$refs.infoForm.validate((valid) => {
-          if(valid) {
-            this.$post('m/add/about/us',this.form).then(res => {
-              if(res.errCode === 200) {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'success'
-                });
-                this.$router.push('/aboutus/aboutlist');
-              } else {
-                this.$message({
-                  message: res.errMsg,
-                  type:'error'
-                });
-              }
-            });
-          }
-        });
-      },
-      toAuthorInfo(){
-        this.$router.push('/UserCenter/UserInfo');
+        },
+        placeholder: 'Insert text here ...',
+        readOnly: false
       }
     }
+  },
+  components: {
+    doComment
+  },
+  computed: {
+    editor () {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
+  mounted () {
+    // 初始化
+    addQuillTitle()
+  },
+  methods: {
+    handleClose (done) {
+      if (this.loading) {
+        return
+      }
+      this.$confirm('确定要提交评论吗？')
+        .then(_ => {
+          this.loading = true
+          this.timer = setTimeout(() => {
+            done()
+            // 动画关闭需要一定的时间
+            setTimeout(() => {
+              this.loading = false
+            }, 400)
+          }, 2000)
+        })
+        .catch(_ => {})
+    },
+    cancelForm () {
+      this.loading = false
+      this.dialog = false
+      clearTimeout(this.timer)
+    },
+    onEditorReady (editor) {
+    },
+    onSubmit () {
+      // 提交
+      // this.$refs.infoForm.validate，这是表单验证
+      this.$refs.infoForm.validate((valid) => {
+        if (valid) {
+          this.$post('m/add/about/us', this.form).then(res => {
+            if (res.errCode === 200) {
+              this.$message({
+                message: res.errMsg,
+                type: 'success'
+              })
+              this.$router.push('/aboutus/aboutlist')
+            } else {
+              this.$message({
+                message: res.errMsg,
+                type: 'error'
+              })
+            }
+          })
+        }
+      })
+    },
+    toAuthorInfo () {
+      this.$router.push('/UserCenter/UserInfo')
+    }
   }
+}
 </script>
-
-
-
-
