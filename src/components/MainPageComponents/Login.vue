@@ -34,22 +34,40 @@
 </template>
 
 <script>
+import {postUser} from '../../api/api.js'
+import {mapMutations} from 'vuex'
 export default {
   data () {
     return {
       user: {
-        username: 'zhangsan',
-        password: '123'
-        // 为了登录方便，可以直接在这里写好用户名和密码的值
-      }
+        username: '',
+        password: ''
+      },
+      userToken: ''
     }
   },
   methods: {
+    ...mapMutations(['changeLogin']),
     doLogin () {
-      alert(JSON.stringify(this.user)) // 可以直接把this.user对象传给后端进行校验用户名和密码
+      let _this = this
+      postUser(this.user.username, this.user.password)
+        .then(response => {
+          if (response.status === 200) {
+            console.log(response)
+            _this.userToken = 'JWT ' + response.data.token
+            _this.changeLogin({Authorization: _this.userToken})
+            _this.$router.push({ path: '/MainPage' })
+            alert('登录成功')
+          } else {
+            console.log(response)
+          }
+        }).catch(error => {
+          console.log(error)
+          alert('账号或密码错误')
+        })
     },
     toRegist () {
-      this.$router.push({ path: '/Regist' })
+      this.$router.push({ path: '/Register' })
     }
   }
 }

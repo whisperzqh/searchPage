@@ -8,7 +8,7 @@
                style="float: left; margin-top: 10px; margin-left: 10px" @click="toAuthorInfo">{{AuthorName}}</el-button>
       <span style="float: right; font-size: 14px; margin-top: 10px;">{{postDate}}</span>
       <el-tag>分类</el-tag>
-      <el-button style="margin-top: 10px; padding: 3px 0" type="text" @click="viewmain">{{title}}</el-button>
+      <el-button style="margin-top: 10px; padding: 3px 0" type="text" @click="toViewMain">{{title}}</el-button>
       <el-tag type="info" size="medium" v-for="(tag,index) in tags" :key="index" style="margin-right: 8px;">
         {{tag.label}}
       </el-tag>
@@ -21,26 +21,29 @@
 
 <script>
 export default{
-  name:'Card',
-  data(){
-    return{
-      AuthorName:'User',
-      title: '标题',
-      simple:'文章简介',
-      postDate:'2019-01-01',
-      tags:[
-        {value: 'HTML', label: 'HTML'},
-        {value: 'java', label: 'java'},
-      ],
-      imgUrl: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-    };
+  name: 'Card',
+  props: {
+    Card: Object
+  },
+  data () {
+    return {
+      AuthorName: this.Card.AuthorName,
+      title: this.Card.title,
+      simple: this.Card.simple,
+      postDate: this.Card.postDate,
+      tags: this.Card.tags,
+      imgUrl: this.Card.imgUrl
+    }
+  },
+  mounted () {
+    console.log('Children' + this.Card)
   },
   methods: {
-    viewmain () {
-      this.$router.push({path: '/ViewMain'});
+    toViewMain () {
+      this.$router.push({name: 'ViewMain', params: {AuthorId: this.AuthorName, BlogTitle: this.title}})
     },
-    toAuthorInfo(){
-      this.$router.push('/UserCenter/UserInfo');
+    toAuthorInfo () {
+      this.$router.push({name: 'UserInfo', params: {UserId: this.AuthorName}})
     }
   }
 }

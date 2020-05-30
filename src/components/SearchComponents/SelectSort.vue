@@ -19,9 +19,6 @@ export default {
       }, {
         value: '选项2',
         label: '时间降序'
-      }, {
-        value: '选项3',
-        label: '综合'
       }],
       value: ''
     }

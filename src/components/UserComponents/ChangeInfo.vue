@@ -65,78 +65,75 @@
 </template>
 
 <script>
-  import UserNav from './UserCenter'
-  export default {
-    name: "ChangeInfo",
-    data(){
-      return{
-        user:{
-          url: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-          UserName: 'User',
-          fansNum: 13,
-          followsNum: 70,
-          Intro: '这个人什么也没写~',
-          registerDate:'2018-10-23',
-          email: '123@123.com',
-          passwordo: '123',
-          password1:'',
-          password2:'',
-          pswd: true,
-        },
-        rules: {
-          UserName: [
-            {required: false, message: '在15个字符以内', trigger: 'blur'}
-          ],
-        }
-      }
-    },
-    components:{
-      UserNav,
-    },
-    methods: {
-      doLogin() {
-        alert(JSON.stringify(this.user)) // 可以直接把this.user对象传给后端进行校验用户名和密码
+import UserNav from './UserCenter'
+export default {
+  name: 'ChangeInfo',
+  data () {
+    return {
+      user: {
+        url: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+        UserName: 'User',
+        fansNum: 13,
+        followsNum: 70,
+        Intro: '这个人什么也没写~',
+        registerDate: '2018-10-23',
+        email: '123@123.com',
+        passwordo: '123',
+        password1: '',
+        password2: '',
+        pswd: true
       },
-      onSubmit() {
-        // 提交
-        // this.$refs.infoForm.validate，这是表单验证
-        this.$refs.upload.submit();//提交图片
-        this.$refs.infoForm.validate((valid) => {
-          if (valid) {
-            this.$post('m/add/about/us', this.infoForm).then(res => {
-              if (res.errCode === 200) { // 修改了==
-                this.$message({
-                  message: res.errMsg,
-                  type: 'success'
-                })
-                this.$router.push('/aboutus/aboutlist')
-              } else {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'error'
-                })
-              }
-            })
-          }
-        })
-      },
-      handleAvatarSuccess(res, file) {
-        this.user.url = URL.createObjectURL(file.raw);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = /image/.test(file.type);
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          alert('上传头像图片只能是图片格式!');
-        }
-        if (!isLt2M) {
-          alert('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+      rules: {
+        UserName: [
+          {required: false, message: '在15个字符以内', trigger: 'blur'}
+        ]
       }
     }
+  },
+  components: {
+    UserNav
+  },
+  methods: {
+    onSubmit () {
+      // 提交
+      // this.$refs.infoForm.validate，这是表单验证
+      // this.$refs.upload.submit()// 提交图片
+      this.$refs.infoForm.validate((valid) => {
+        if (valid) {
+          this.$post('http://127.0.0.1:8000/users/1', this.infoForm).then(res => {
+            if (res.errCode === 200) { // 修改了==
+              this.$message({
+                message: res.errMsg,
+                type: 'success'
+              })
+              // this.$router.push('/aboutus/aboutlist')
+            } else {
+              this.$message({
+                message: res.errMsg,
+                type: 'error'
+              })
+            }
+          })
+        }
+      })
+    },
+    handleAvatarSuccess (res, file) {
+      this.user.url = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = /image/.test(file.type)
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        alert('上传头像图片只能是图片格式!')
+      }
+      if (!isLt2M) {
+        alert('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    }
   }
+}
 </script>
 
 <style scoped>
